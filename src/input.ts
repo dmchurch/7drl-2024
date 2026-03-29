@@ -39,14 +39,17 @@ export class InputManager {
 
     keyIndicators: KeyboardCueElement[] = [];
 
-    #singleKeyIndicator = [this.keyIndicators[0]];
+    abilityIndicators: KeyboardCueElement[] = [];
+
+    #limitedKeyIndicators: KeyboardCueElement[] = [];
 
     get activeKeyIndicators() {
         if (this.keyIndicators.length === 0 || this.helpOpen) {
             return this.keyIndicators;
         }
-        this.#singleKeyIndicator[0] = this.keyIndicators[0];
-        return this.#singleKeyIndicator;
+        this.#limitedKeyIndicators[0] = this.keyIndicators[0];
+        this.#limitedKeyIndicators.splice(1, 0, ...this.abilityIndicators);
+        return this.#limitedKeyIndicators;
     }
     
     helpDialog: HTMLDialogElement;

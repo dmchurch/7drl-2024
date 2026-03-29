@@ -202,6 +202,22 @@ canvas.layer-focus {
     margin: 0;
 }
 
+#statsPanel .title {
+    border: 2px solid transparent;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+#statsPanel .activatable .title {
+    border-color: currentColor;
+    cursor: pointer;
+}
+
+#statsPanel .activating .title {
+    background: #689c3da0;
+}
+
+
 #statsPanel dd {
     display: flex;
     gap: 1em;
@@ -341,6 +357,7 @@ meter {
     grid:
         "label label label" max-content
         "indicator indicator indicator" 1fr
+        "left center right" max-content
         "left center right" max-content
         "left center right" max-content
         "left center right" max-content
@@ -541,6 +558,10 @@ kbd {
 
 #help kbd {
     color: white;    
+}
+
+kbd.highlight {
+    background: #689c3d;
 }
 
 #controlsHelp {

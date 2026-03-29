@@ -169,6 +169,16 @@ export class KeyboardCueElement extends BaseComponent {
             ],
             viewBox: [93, 216, 294, 129],
         },
+        abilities: {
+            keys: [
+                "3", "4", "5", "6", "7",
+                "e", "r", "t", "y", "u",
+                "d", "f", "g", "h", "j",
+                "c", "v", "b", "n", "m",
+                "space",
+            ],
+            viewBox: [242, 121, 108, 175],
+        },
         spaceEnvirons: {
             keys: [
                 "capslock", "a", "s", "d", "f", "g", "h", "j", "k", "l", "semicolon", "quote", "return",

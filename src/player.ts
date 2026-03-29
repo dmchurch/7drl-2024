@@ -8,6 +8,7 @@ import { Astar3D } from "./rot3d.js";
 import { MessageLogElement } from "./uicomponents.js";
 import { FOG_KNOWN, WorldMap } from "./worldmap.js";
 import { equipment, godSummonMessage, winMessage } from "~data/items.js";
+import { DOMKeyBindingType, InputManager } from "./input.js";
 
 console.debug("Starting player.js");
 
@@ -72,6 +73,8 @@ export class Player extends Creature {
     inventoryUI = new InventoryUI(this, "inventory");
     messageLog: MessageLogElement;
 
+    activatingBodyPart: StatName | null = null;
+
     destroyMessages = new WeakMap();
 
     get inventoryOpen() {
@@ -101,6 +104,22 @@ export class Player extends Creature {
             } else {
                 throw new Error(`Bad data-bodypart: ${bodypart}`);
             }
+        }
+    }
+
+    bindAbilityKey(input: InputManager, bodyPart: StatName, ...keys: DOMKeyBindingType[]) {
+        input.bind(() => this.activateBodyPart(bodyPart), ...keys).setName(`Activate ${bodyPart} ability`);
+        const abilityCue = this.statUIs[bodyPart].ability;
+        if (abilityCue && keys.length) {
+            abilityCue.style.display = "";
+            for (const cue of keys) {
+                if (typeof cue === "string" && InputManager.isKeyCode(cue)) {
+                    abilityCue.lowlight.add(InputManager.keyCodesToKeyCues[cue]);
+                }
+            }
+            input.abilityIndicators.push(abilityCue);
+            this.statUIs[bodyPart].container.classList.add("activatable");
+            this.statUIs[bodyPart].title.addEventListener("click", () => this.activateBodyPart(bodyPart));
         }
     }
 
@@ -313,6 +332,43 @@ export class Player extends Creature {
         Creature.activePlayer ??= this;
     }
 
+    activateBodyPart(bodyPart: StatName) {
+        const oldActivating = this.activatingBodyPart;
+        if (oldActivating) {
+            this.deactivateBodyPart(oldActivating);
+            if (oldActivating === bodyPart) return;
+        }
+        const abilityCue = this.statUIs[bodyPart].ability;
+        if (abilityCue) {
+            abilityCue.secondary.add(...abilityCue.lowlight);
+            this.statUIs[bodyPart].container.classList.add("activating");
+            this.activatingBodyPart = bodyPart;
+        }
+    }
+
+    deactivateBodyPart(bodyPart?: StatName) {
+        bodyPart ??= this.activatingBodyPart;
+        if (bodyPart && this.activatingBodyPart !== bodyPart) return;
+        this.activatingBodyPart = null;
+        if (bodyPart) {
+            const abilityCue = this.statUIs[bodyPart].ability;
+            if (abilityCue) {
+                abilityCue.secondary.remove(...abilityCue.lowlight);
+                this.statUIs[bodyPart].container.classList.remove("activating");
+            }
+        }
+    }
+
+    fireBodyPart(bodyPart: StatName, dx = 0, dy = 0, dz = 0) {
+        const stat = this.stats[bodyPart];
+        if (stat.equippedItem) {
+            stat.equippedItem.fire(this, dx, dy, dz);
+        } else {
+            this.messageLog.addMessage(`You wiggle your ${bodyPart === "dorsal" ? "dorsal fin" : bodyPart} but nothing interesting happens.`);
+        }
+        this.deactivateBodyPart(bodyPart);
+    }
+
     queueEat(item: Item, count=1) {
         this.queueAction(() => this.eatItem(item, count));
     }
@@ -326,7 +382,9 @@ export class Player extends Creature {
             this.inventoryUI.moveSelection(dx, dy);
             return;
         }
-        const action = () => this.move(dx, dy, dz);
+        const action = this.activatingBodyPart
+            ? () => this.fireBodyPart(this.activatingBodyPart, dx, dy, dz)
+            : () => this.move(dx, dy, dz);
         this.queueAction(action);
     }
 

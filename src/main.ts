@@ -71,6 +71,10 @@ MoveAction.WAIT.addKeyBindings("Space", "Numpad5");
 
 MoveAction.DiagonalOnly.addKeyBindings(input.VKeyAlt);
 
+player.bindAbilityKey(input, "dorsal", "KeyR");
+player.bindAbilityKey(input, "fins", "KeyF");
+player.bindAbilityKey(input, "tail", "KeyV");
+
 input.bind(() => player.toggleInventory(), "Tab", "KeyI").setName("Inventory");
 
 input.bind(() => player.inventoryUI?.performAction("eat"), "Digit1").setName("Eat");

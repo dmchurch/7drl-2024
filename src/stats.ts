@@ -2,6 +2,7 @@ import { cloneTemplate, getElement, htmlElement, meterElement, outputElement } f
 import { equipment } from "~data/items.js";
 import type { Item } from "./props.js";
 import type { Player } from "./player.js";
+import { KeyboardCueElement } from "./uicomponents.js";
 
 export const allStats = {
     "head": {
@@ -91,8 +92,9 @@ abstract class MeterUI {
     stat;
 
     container: HTMLElement;
-    title;
-    meter;
+    title: HTMLElement;
+    meter: HTMLMeterElement;
+    ability?: KeyboardCueElement;
 
     abstract get label(): string;
 
@@ -103,8 +105,9 @@ abstract class MeterUI {
         if (!this.container.querySelector("dt")) {
             this.container.appendChild(cloneTemplate(template));
         }
-        this.title = this.container.querySelector("dt");
+        this.title = this.container.querySelector(".title");
         this.meter = meterElement(this.container.querySelector(".hpmeter"));
+        this.ability = getElement(this.container.querySelector("keyboard-cue"), KeyboardCueElement, false, false);
     }
 
     update() {

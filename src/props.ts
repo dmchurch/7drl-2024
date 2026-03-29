@@ -147,6 +147,10 @@ export class Item extends Prop {
         this.stackSize -= newStack.stackSize;
         return newStack;
     }
+
+    fire(actor: Actor, dx = 0, dy = 0, dz = 0) {
+        
+    }
 }
 
 export class EggItem extends Item {

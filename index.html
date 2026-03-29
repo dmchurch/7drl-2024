@@ -60,6 +60,10 @@
                 <dt><keyboard-cue view="full" secondary="f1"></keyboard-cue></dt>
                 <dd>Help</dd>
             </div>
+            <div>
+                <dt><keyboard-cue view="abilities" secondary="r"></keyboard-cue></dt>
+                <dd>Activate dorsal ability</dd>
+            </div>
         </dl>
         <dl class="center controls">
             <div>
@@ -89,6 +93,10 @@
             <div>
                 <dt><kbd>Alt</kbd> + <kbd>`</kbd></dt>
                 <dd>Show debug controls</dd>
+            </div>
+            <div>
+                <dt><keyboard-cue view="abilities" secondary="f"></keyboard-cue></dt>
+                <dd>Activate fins ability</dd>
             </div>
         </dl>
         <dl class="right controls">
@@ -120,6 +128,10 @@
                 <dt><keyboard-cue view="full" secondary="l-alt r-alt z add"></keyboard-cue></dt>
                 <dd>Look down</dd>
             </div>
+            <div>
+                <dt><keyboard-cue view="abilities" secondary="v"></keyboard-cue></dt>
+                <dd>Activate tail ability</dd>
+            </div>
         </dl>
     </dialog>
     <template id="inventoryItemTemplate">
@@ -146,7 +158,10 @@
                 <div class="bodypart" data-bodypart="soul" id="soul"></div>
                 <div class="bodypart" data-bodypart="satiety" id="satiety"></div>
                 <template id="bodypartTemplate">
-                    <dt></dt>
+                    <dt>
+                        <span class="title"></span>
+                        <keyboard-cue view="abilities" style="display: none;"></keyboard-cue>
+                    </dt>
                     <dd>
                         <meter class="hpmeter"></meter>
                         <label>
@@ -156,7 +171,7 @@
                     </dd>
                 </template>
                 <template id="satietyTemplate">
-                    <dt></dt>
+                    <dt class="title"></dt>
                     <dd>
                         <meter class="hpmeter"></meter>
                         <label>
